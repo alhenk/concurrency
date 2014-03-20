@@ -1,6 +1,6 @@
 package com.epam.koryagin.library;
 
-public class Reader extends Thread {
+public class Reader implements Runnable {
 	private static int counter = 0;
 
 	Repository library;

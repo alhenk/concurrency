@@ -15,7 +15,7 @@ public final class LibraryTaskLogic {
 	/**
 	 * Create library with certain books
 	 */
-	public static Repository createSynchLibrary() {
+	public static Repository createSyncLibrary() {
 		SynchronizedLibrary library = new SynchronizedLibrary();
 		library.add(new Book("JEE"));
 		library.add(new Book("Terminator"));
@@ -29,10 +29,10 @@ public final class LibraryTaskLogic {
 	/**
 	 * Create list of readers
 	 */
-	public static List<Reader> createListOfReaders(Repository library) {
-		List<Reader> readers = new ArrayList<Reader>();
+	public static List<Thread> createListOfReaders(Repository library) {
+		List<Thread> readers = new ArrayList<Thread>();
 		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(Reader.create(library));
+			readers.add(new Thread(Reader.create(library)));
 		}
 		return readers;
 	}
@@ -40,20 +40,20 @@ public final class LibraryTaskLogic {
 	/**
 	 * Start reading random books
 	 */
-	public static void startReading(List<Reader> readers) {
-		for (Reader reader : readers) {
+	public static void startReading(List<Thread> readers) {
+		for (Thread reader : readers) {
 			reader.start();
 		}
 	}
 
-	/*
+	/**
 	 * Wait until all readers returned books
 	 */
-	public static void waitAllReadersFinished(List<Reader> readers) {
+	public static void waitAllReadersFinished(List<Thread> readers) {
 		boolean allReadingFinished = false;
 		while (!allReadingFinished) {
 			allReadingFinished = true;
-			for (Reader reader : readers) {
+			for (Thread reader : readers) {
 				if (reader.getState() != Thread.State.TERMINATED) {
 					allReadingFinished = false;
 				}
