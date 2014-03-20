@@ -3,8 +3,10 @@ package com.epam.koryagin.library;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SynchronizedLibrary extends Repository{
+import org.apache.log4j.Logger;
 
+public class SynchronizedLibrary extends Repository{
+	private static final Logger LOGGER = Logger.getLogger(SynchronizedLibrary.class);
 	private List<Book> books;
 
 	public SynchronizedLibrary() {
@@ -23,14 +25,14 @@ public class SynchronizedLibrary extends Repository{
 
 		synchronized (this) {
 			while (!theBook.isAvailable()) {
-				System.out.println("Reader " + readerID
+				LOGGER.debug("Reader " + readerID
 						+ "\t\t\t is waiting for " + theBook.getTitle());
 				wait();
 			}
 
 			theBook.setAvailable(false);
 			theBook.incrementReadingCounter();
-			System.out.println("Reader " + readerID + " took the book "
+			LOGGER.debug("Reader " + readerID + " took the book "
 					+ theBook.getTitle());
 		}
 		return theBook;
@@ -39,7 +41,7 @@ public class SynchronizedLibrary extends Repository{
 	public void returnBook(int readerID, Book theBook) {
 		synchronized (this) {
 			theBook.setAvailable(true);
-			System.out.println("Reader " + readerID + " returned the book "
+			LOGGER.debug("Reader " + readerID + " returned the book "
 					+ theBook.getTitle());
 			notifyAll();
 		}

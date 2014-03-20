@@ -3,7 +3,10 @@ package com.epam.koryagin.library;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public final class LibraryTaskLogic {
+	private static final Logger LOGGER = Logger.getLogger(LibraryTaskLogic.class);
 	private final static int NUMBER_OF_READERS = 50;
 
 	private LibraryTaskLogic() {
@@ -58,7 +61,7 @@ public final class LibraryTaskLogic {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error(e);
 			}
 		}
 	}
@@ -67,10 +70,14 @@ public final class LibraryTaskLogic {
 	 *  Print statistics of book reading
 	 */
 	public static void bookUsingReport(Repository library) {
+		StringBuilder report = new StringBuilder("\n");
 		for (Book book : library.getBooks()) {
-			System.out.println(book.getTitle() + " was read \t\t"
-					+ book.getReadingCounter() + " times");
+			report.append(book.getTitle())
+			.append(" was read \t\t")
+			.append(book.getReadingCounter())
+			.append(" times\n");
 		}
+		LOGGER.info(report.toString());
 	}
 
 }
