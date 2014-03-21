@@ -13,7 +13,7 @@ public abstract class Repository {
 
 	public abstract Book rentRandomBook() throws InterruptedException;
 
-	public abstract void returnBook(Book theBook);
+	public abstract void returnBook(Book theBook) throws InterruptedException;
 
 	public abstract void add(Book book);
 
