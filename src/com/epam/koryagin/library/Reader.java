@@ -26,9 +26,9 @@ public class Reader implements Runnable {
 	@Override
 	public void run() {
 		try {
-			theBook = library.rentRandomBook(readerID);
+			theBook = library.rentRandomBook();
 			Thread.sleep((long) (100 + Math.random() * 500));
-			library.returnBook(readerID, theBook);
+			library.returnBook(theBook);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

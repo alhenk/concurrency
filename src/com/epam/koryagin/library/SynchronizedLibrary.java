@@ -18,31 +18,32 @@ public class SynchronizedLibrary extends Repository {
 		this.setBooks(books);
 	}
 
-	public synchronized Book rentRandomBook(int readerID)
+	public synchronized Book rentRandomBook()
 			throws InterruptedException {
 		int booksTotalQuantaty = books.size();
 		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
 		Book theBook = books.get(bookIdx);
-
+		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
 			while (!theBook.isAvailable()) {
-				LOGGER.debug("Reader " + readerID + "\t\t\t is waiting for "
+				LOGGER.debug(readerID + "\t\t\t is waiting for "
 						+ theBook.getTitle());
 				wait();
 			}
 
 			theBook.setAvailable(false);
 			theBook.incrementReadingCounter();
-			LOGGER.debug("Reader " + readerID + " took the book "
+			LOGGER.debug(readerID + " took the book "
 					+ theBook.getTitle());
 		}
 		return theBook;
 	}
 
-	public void returnBook(int readerID, Book theBook) {
+	public void returnBook(Book theBook) {
+		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
 			theBook.setAvailable(true);
-			LOGGER.debug("Reader " + readerID + " returned the book "
+			LOGGER.debug(readerID + " returned the book "
 					+ theBook.getTitle());
 			notifyAll();
 		}
