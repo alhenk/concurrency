@@ -1,52 +1,48 @@
-package com.epam.koryagin.library;
+package com.epam.koryagin.concurrent.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 
-public class SynchronizedLibrary extends Repository {
+public class DefaultLibrary extends Repository {
 	private static final Logger LOGGER = Logger
 			.getLogger(SynchronizedLibrary.class);
+
+	
 	private List<Book> books;
 
-	public SynchronizedLibrary() {
-		books = new ArrayList<Book>();
+	public DefaultLibrary() {
+		setBooks(new ArrayList<Book>());
 	}
 
-	public SynchronizedLibrary(List<Book> books) {
+	public DefaultLibrary(List<Book> books) {
 		this.setBooks(books);
 	}
 
-	public synchronized Book rentRandomBook()
-			throws InterruptedException {
+	@Override
+	public Book rentRandomBook() throws InterruptedException {
 		int booksTotalQuantaty = books.size();
 		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
 		Book theBook = books.get(bookIdx);
 		String readerID = Thread.currentThread().getName();
-		synchronized (this) {
-			while (!theBook.isAvailable()) {
-				LOGGER.debug(readerID + "\t\t\t is waiting for "
-						+ theBook.getTitle());
-				wait();
-			}
-
-			theBook.setAvailable(false);
-			theBook.incrementReadingCounter();
-			LOGGER.debug(readerID + " took the book "
+		
+		while (!theBook.isAvailable()) {
+			Thread.sleep(200);
+			LOGGER.debug(readerID + "\t\t\t is waiting for "
 					+ theBook.getTitle());
 		}
+				
+		theBook.setAvailable(false);
+		theBook.incrementReadingCounter();
+		LOGGER.debug(readerID + " took the book " + theBook.getTitle());
 		return theBook;
 	}
 
+	@Override
 	public void returnBook(Book theBook) {
 		String readerID = Thread.currentThread().getName();
-		synchronized (this) {
-			theBook.setAvailable(true);
-			LOGGER.debug(readerID + " returned the book "
-					+ theBook.getTitle());
-			notifyAll();
-		}
+		theBook.setAvailable(true);
+		LOGGER.debug(readerID + " returned the book " + theBook.getTitle());
 	}
 
 	public void add(Book book) {

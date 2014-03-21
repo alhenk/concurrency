@@ -1,9 +1,13 @@
-package com.epam.koryagin.library;
+package com.epam.koryagin.concurrent.task;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import com.epam.koryagin.concurrent.customer.CustomerAbstractFactory;
+import com.epam.koryagin.concurrent.repository.Book;
+import com.epam.koryagin.concurrent.repository.Repository;
 
 public final class LibraryTaskLogic {
 	private static final Logger LOGGER = Logger
@@ -11,6 +15,7 @@ public final class LibraryTaskLogic {
 	private static final int NUMBER_OF_READERS = 50;
 	private static final ThreadGroup libraryReader = new ThreadGroup(
 			"A group of readers");
+	private static final long GET_STATE_POLLING_DELAY = 1000;
 
 	private LibraryTaskLogic() {
 	}
@@ -18,8 +23,7 @@ public final class LibraryTaskLogic {
 	/**
 	 * Create library with certain books
 	 */
-	public static Repository createSyncLibrary() {
-		SynchronizedLibrary library = new SynchronizedLibrary();
+	public static Repository createLibrary(Repository library) {
 		library.add(new Book("JEE"));
 		library.add(new Book("Terminator"));
 		library.add(new Book("ABC"));
@@ -32,11 +36,10 @@ public final class LibraryTaskLogic {
 	/**
 	 * Create list of thread readers in the group of LibraryReaders
 	 */
-	public static List<Thread> createListOfReaders(Repository library) {
-
+	public static List<Thread> createListOfReaders(CustomerAbstractFactory customer) {
 		List<Thread> readers = new ArrayList<Thread>();
 		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(new Thread(libraryReader, Reader.create(library),
+			readers.add(new Thread(libraryReader, customer.getInstance(),
 					"Reader " + idx));
 		}
 		return readers;
@@ -64,7 +67,7 @@ public final class LibraryTaskLogic {
 				}
 			}
 			try {
-				Thread.sleep(500);
+				Thread.sleep(GET_STATE_POLLING_DELAY);
 			} catch (InterruptedException e) {
 				LOGGER.error(e);
 			}
@@ -77,7 +80,7 @@ public final class LibraryTaskLogic {
 	public static void waitAllReadersFinished() {
 		while (libraryReader.activeCount() > 0) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(GET_STATE_POLLING_DELAY);
 			} catch (InterruptedException e) {
 				LOGGER.error(e);
 			}

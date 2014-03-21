@@ -1,4 +1,4 @@
-package com.epam.koryagin.library;
+package com.epam.koryagin.concurrent.repository;
 
 import java.util.List;
 
