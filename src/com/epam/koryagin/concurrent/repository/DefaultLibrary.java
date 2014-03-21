@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 public class DefaultLibrary extends Repository {
 	private static final Logger LOGGER = Logger
-			.getLogger(SynchronizedLibrary.class);
+			.getLogger(DefaultLibrary.class);
 
 	
 	private List<Book> books;
@@ -27,7 +27,7 @@ public class DefaultLibrary extends Repository {
 		String readerID = Thread.currentThread().getName();
 		
 		while (!theBook.isAvailable()) {
-			Thread.sleep(200);
+			Thread.sleep(AVAILABLE_POLLING_DELAY);
 			LOGGER.debug(readerID + "\t\t\t is waiting for "
 					+ theBook.getTitle());
 		}

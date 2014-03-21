@@ -5,7 +5,7 @@ import com.epam.koryagin.concurrent.repository.Repository;
 
 public class Reader extends Customer {
 	/**
-	 * Default constructor with SychronizedLibrary
+	 * Default constructor with DefaultLibrary
 	 */
 	public Reader() {
 		this.repository = new DefaultLibrary();

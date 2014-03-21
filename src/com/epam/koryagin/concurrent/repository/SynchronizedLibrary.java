@@ -30,7 +30,6 @@ public class SynchronizedLibrary extends Repository {
 						+ theBook.getTitle());
 				wait();
 			}
-
 			theBook.setAvailable(false);
 			theBook.incrementReadingCounter();
 			LOGGER.debug(readerID + " took the book "

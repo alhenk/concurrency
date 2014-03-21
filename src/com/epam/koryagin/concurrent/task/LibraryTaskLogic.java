@@ -5,17 +5,23 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.epam.koryagin.concurrent.customer.CustomerAbstractFactory;
+import com.epam.koryagin.concurrent.customer.factory.CustomerAbstractFactory;
 import com.epam.koryagin.concurrent.repository.Book;
 import com.epam.koryagin.concurrent.repository.Repository;
+import com.epam.koryagin.concurrent.util.PropertyManager;
 
 public final class LibraryTaskLogic {
+	static {
+		PropertyManager.load("configure.properties");
+	}
 	private static final Logger LOGGER = Logger
 			.getLogger(LibraryTaskLogic.class);
-	private static final int NUMBER_OF_READERS = 50;
+	private static final int NUMBER_OF_READERS = 
+			Integer.valueOf(PropertyManager.getValue("libraryTaskLogic.numberOfReaders"));
 	private static final ThreadGroup libraryReader = new ThreadGroup(
 			"A group of readers");
-	private static final long GET_STATE_POLLING_DELAY = 1000;
+	private static final long GET_STATE_POLLING_DELAY = 
+			Long.valueOf(PropertyManager.getValue("libraryTaskLogic.getStatePollingDelay"));
 
 	private LibraryTaskLogic() {
 	}
@@ -36,11 +42,12 @@ public final class LibraryTaskLogic {
 	/**
 	 * Create list of thread readers in the group of LibraryReaders
 	 */
-	public static List<Thread> createListOfReaders(CustomerAbstractFactory customer) {
+	public static List<Thread> createListOfReaders(
+			CustomerAbstractFactory customer) {
 		List<Thread> readers = new ArrayList<Thread>();
 		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(new Thread(libraryReader, customer.getInstance(),
-					"Reader " + idx));
+			readers.add(new Thread(libraryReader, customer.getInstance(), " "
+					+ customer.getName() + idx));
 		}
 		return readers;
 	}
@@ -76,6 +83,7 @@ public final class LibraryTaskLogic {
 
 	/**
 	 * Wait until all readers returned books only for debugging purpose
+	 * The method activeCount() gives only estimation
 	 */
 	public static void waitAllReadersFinished() {
 		while (libraryReader.activeCount() > 0) {
@@ -88,8 +96,8 @@ public final class LibraryTaskLogic {
 	}
 
 	/**
-	 * Print statistics of book reading
-	 * totalAmount should be equal to NUMBER_OF_READERS
+	 * Print statistics of book reading totalAmount should be equal to
+	 * NUMBER_OF_READERS
 	 */
 	public static void bookUsingReport(Repository library) {
 		StringBuilder report = new StringBuilder("\n");
@@ -100,7 +108,7 @@ public final class LibraryTaskLogic {
 			report.append(book.getTitle()).append(" was read \t\t")
 					.append(readingCounter).append(" times\n");
 		}
-		report.append("\nTOTAL NUMBER OF READERS ").append(totalAmount);
+		report.append("\nTOTAL NUMBER OF READERS ").append(totalAmount).append("\n");
 		LOGGER.info(report.toString());
 	}
 }
