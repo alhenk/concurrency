@@ -6,8 +6,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public final class LibraryTaskLogic {
-	private static final Logger LOGGER = Logger.getLogger(LibraryTaskLogic.class);
-	private final static int NUMBER_OF_READERS = 50;
+	private static final Logger LOGGER = Logger
+			.getLogger(LibraryTaskLogic.class);
+	private static final int NUMBER_OF_READERS = 50;
+	private static final ThreadGroup libraryReader = new ThreadGroup(
+			"A group of readers");
 
 	private LibraryTaskLogic() {
 	}
@@ -27,12 +30,14 @@ public final class LibraryTaskLogic {
 	}
 
 	/**
-	 * Create list of readers
+	 * Create list of thread readers in the group of LibraryReaders
 	 */
 	public static List<Thread> createListOfReaders(Repository library) {
+
 		List<Thread> readers = new ArrayList<Thread>();
 		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(new Thread(Reader.create(library)));
+			readers.add(new Thread(libraryReader, Reader.create(library),
+					"Reader " + idx));
 		}
 		return readers;
 	}
@@ -67,17 +72,32 @@ public final class LibraryTaskLogic {
 	}
 
 	/**
-	 *  Print statistics of book reading
+	 * Wait until all readers returned books only for debugging purpose
+	 */
+	public static void waitAllReadersFinished() {
+		while (libraryReader.activeCount() > 0) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			}
+		}
+	}
+
+	/**
+	 * Print statistics of book reading
+	 * totalAmount should be equal to NUMBER_OF_READERS
 	 */
 	public static void bookUsingReport(Repository library) {
 		StringBuilder report = new StringBuilder("\n");
+		int totalAmount = 0;
 		for (Book book : library.getBooks()) {
-			report.append(book.getTitle())
-			.append(" was read \t\t")
-			.append(book.getReadingCounter())
-			.append(" times\n");
+			int readingCounter = book.getReadingCounter();
+			totalAmount += readingCounter;
+			report.append(book.getTitle()).append(" was read \t\t")
+					.append(readingCounter).append(" times\n");
 		}
+		report.append("\nTOTAL NUMBER OF READERS ").append(totalAmount);
 		LOGGER.info(report.toString());
 	}
-
 }

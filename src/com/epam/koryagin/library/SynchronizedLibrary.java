@@ -5,8 +5,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-public class SynchronizedLibrary extends Repository{
-	private static final Logger LOGGER = Logger.getLogger(SynchronizedLibrary.class);
+public class SynchronizedLibrary extends Repository {
+	private static final Logger LOGGER = Logger
+			.getLogger(SynchronizedLibrary.class);
 	private List<Book> books;
 
 	public SynchronizedLibrary() {
@@ -25,8 +26,8 @@ public class SynchronizedLibrary extends Repository{
 
 		synchronized (this) {
 			while (!theBook.isAvailable()) {
-				LOGGER.debug("Reader " + readerID
-						+ "\t\t\t is waiting for " + theBook.getTitle());
+				LOGGER.debug("Reader " + readerID + "\t\t\t is waiting for "
+						+ theBook.getTitle());
 				wait();
 			}
 
