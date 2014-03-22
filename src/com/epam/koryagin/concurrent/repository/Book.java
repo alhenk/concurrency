@@ -2,8 +2,8 @@ package com.epam.koryagin.concurrent.repository;
 
 public class Book {
 	private String title;
-	private volatile boolean available;
-	private int readingCounter = 0;
+	private volatile  boolean available;
+	private volatile int readingCounter = 0;
 
 	public Book() {
 		this.available = true;

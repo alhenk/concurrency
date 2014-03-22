@@ -27,9 +27,9 @@ public class DefaultLibrary extends Repository {
 		String readerID = Thread.currentThread().getName();
 		
 		while (!theBook.isAvailable()) {
-			Thread.sleep(AVAILABLE_POLLING_DELAY);
 			LOGGER.debug(readerID + "\t\t\t is waiting for "
 					+ theBook.getTitle());
+			Thread.sleep(AVAILABLE_POLLING_DELAY);
 		}
 				
 		theBook.setAvailable(false);
@@ -40,13 +40,13 @@ public class DefaultLibrary extends Repository {
 
 	@Override
 	public void returnBook(Book theBook) {
-		String readerID = Thread.currentThread().getName();
 		theBook.setAvailable(true);
+		String readerID = Thread.currentThread().getName();
 		LOGGER.debug(readerID + " returned the book " + theBook.getTitle());
 	}
 
 	public void add(Book book) {
-		books.add(book);
+		books.add(book.copyBook());
 	}
 
 	public void remove(Book book) {

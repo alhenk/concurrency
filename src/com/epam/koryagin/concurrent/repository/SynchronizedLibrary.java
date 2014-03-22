@@ -49,7 +49,7 @@ public class SynchronizedLibrary extends Repository {
 	}
 
 	public void add(Book book) {
-		books.add(book);
+		books.add(book.copyBook());
 	}
 
 	public void remove(Book book) {
