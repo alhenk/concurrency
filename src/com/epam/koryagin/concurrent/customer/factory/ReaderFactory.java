@@ -13,7 +13,7 @@ public class ReaderFactory implements CustomerAbstractFactory {
 	}
 	
 	@Override
-	public Customer getInstance() {
+	public Customer createCustomer() {
 		return Reader.create(repository);
 	}
 

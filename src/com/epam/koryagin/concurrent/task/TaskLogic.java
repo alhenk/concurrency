@@ -54,7 +54,7 @@ public final class TaskLogic {
 		LibraryTaskLogic.bookUsingReport(library);
 	}
 	
-	public static void runUnprotectedLibraryTask() {
+	public static void runUsafeLibraryTask() {
 		LOGGER.info("RUN UNPROTECTED LIBRARY TASK");
 		// Create library
 		Repository library = LibraryTaskLogic

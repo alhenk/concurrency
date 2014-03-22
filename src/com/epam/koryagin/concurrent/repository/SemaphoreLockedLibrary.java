@@ -2,14 +2,11 @@ package com.epam.koryagin.concurrent.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
-
 import org.apache.log4j.Logger;
 
 import com.epam.koryagin.concurrent.util.SemaphoreLock;
 
 public class SemaphoreLockedLibrary extends Repository {
-	static Semaphore semaphore = new Semaphore(1);
 	private static final Logger LOGGER = Logger
 			.getLogger(SemaphoreLockedLibrary.class);
 
@@ -34,16 +31,23 @@ public class SemaphoreLockedLibrary extends Repository {
 		Book theBook = books.get(bookIdx);
 		String readerID = Thread.currentThread().getName();
 
-		while (!theBook.isAvailable()) {
-			Thread.sleep(AVAILABLE_POLLING_DELAY);
-			LOGGER.debug(readerID + "\t\t\t is waiting for "
-					+ theBook.getTitle());
+		boolean isTaken = false;
+		while (!isTaken) {
+
+			SemaphoreLock.getInstance().getWriteLock();
+			if (theBook.isAvailable()) {
+				theBook.setAvailable(false);
+				theBook.incrementReadingCounter();
+				SemaphoreLock.getInstance().releaseWriteLock();
+				isTaken = true;
+				LOGGER.debug(readerID + " took the book " + theBook.getTitle());
+			} else {
+				SemaphoreLock.getInstance().releaseWriteLock();
+				LOGGER.debug(readerID + "\t\t\t is waiting for "
+						+ theBook.getTitle());
+				Thread.sleep(AVAILABLE_POLLING_DELAY);
+			}
 		}
-		SemaphoreLock.getInstance().getWriteLock();
-		theBook.setAvailable(false);
-		theBook.incrementReadingCounter();
-		SemaphoreLock.getInstance().releaseWriteLock();
-		LOGGER.debug(readerID + " took the book " + theBook.getTitle());
 		return theBook;
 	}
 

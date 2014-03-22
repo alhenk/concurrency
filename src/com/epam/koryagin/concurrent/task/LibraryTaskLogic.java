@@ -43,11 +43,11 @@ public final class LibraryTaskLogic {
 	 * Create list of thread readers in the group of LibraryReaders
 	 */
 	public static List<Thread> createListOfReaders(
-			CustomerAbstractFactory customer) {
+			CustomerAbstractFactory customerFactory) {
 		List<Thread> readers = new ArrayList<Thread>();
 		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(new Thread(libraryReader, customer.getInstance(), " "
-					+ customer.getName() + idx));
+			readers.add(new Thread(libraryReader, customerFactory.createCustomer(), " "
+					+ customerFactory.getName() + idx));
 		}
 		return readers;
 	}

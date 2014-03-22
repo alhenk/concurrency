@@ -6,10 +6,9 @@ public class Runner {
 		//have been tested on <= 5000 then OutOfMemoryError
 		TaskLogic.runSynchronizedLibraryTask();
 		
-		//have been tested on 1000000 readers!
 		TaskLogic.runSemaphoreLockedLibraryTask();
 	
-		TaskLogic.runUnprotectedLibraryTask();
+		TaskLogic.runUsafeLibraryTask();
 		
 
 	}
