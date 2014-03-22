@@ -15,11 +15,11 @@ public class SemaphoreLock {
 		return SingletonHolder.INSTANCE;
 	}
 
-	private Semaphore writeLock = new Semaphore(1);
+	private Semaphore writeLock = new Semaphore(5);
 
 	private Semaphore readLock = new Semaphore(10);
 
-	public void getWriteLock() throws InterruptedException {
+	public void aquireWriteLock() throws InterruptedException {
 		writeLock.acquire();
 	}
 
@@ -27,7 +27,7 @@ public class SemaphoreLock {
 		writeLock.release();
 	}
 
-	public void getReadLock() throws InterruptedException {
+	public void aquireReadLock() throws InterruptedException {
 		readLock.acquire();
 	}
 

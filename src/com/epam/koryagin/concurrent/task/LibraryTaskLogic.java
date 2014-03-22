@@ -32,10 +32,10 @@ public final class LibraryTaskLogic {
 	public static Repository createLibrary(Repository library) {
 		library.add(new Book("JEE"));
 		library.add(new Book("Terminator"));
-		library.add(new Book("ABC"));
-		library.add(new Book("StarWars"));
-		library.add(new Book("TheMatrix"));
-		library.add(new Book("GameOfThrones"));
+//		library.add(new Book("ABC"));
+//		library.add(new Book("StarWars"));
+//		library.add(new Book("TheMatrix"));
+//		library.add(new Book("GameOfThrones"));
 		return library;
 	}
 

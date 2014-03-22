@@ -34,7 +34,7 @@ public class SemaphoreLockedLibrary extends Repository {
 		boolean isTaken = false;
 		while (!isTaken) {
 
-			SemaphoreLock.getInstance().getWriteLock();
+			SemaphoreLock.getInstance().aquireWriteLock();
 			if (theBook.isAvailable()) {
 				theBook.setAvailable(false);
 				theBook.incrementReadingCounter();
@@ -53,7 +53,7 @@ public class SemaphoreLockedLibrary extends Repository {
 
 	@Override
 	public void returnBook(Book theBook) throws InterruptedException {
-		SemaphoreLock.getInstance().getWriteLock();
+		SemaphoreLock.getInstance().aquireWriteLock();
 		theBook.setAvailable(true);
 		SemaphoreLock.getInstance().releaseWriteLock();
 		String readerID = Thread.currentThread().getName();
