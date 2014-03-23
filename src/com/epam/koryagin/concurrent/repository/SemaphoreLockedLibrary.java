@@ -24,29 +24,36 @@ public class SemaphoreLockedLibrary extends Repository {
 	public static SemaphoreLockedLibrary getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
+	/**
+	 * Static fabric method
+	 */
+	public static Repository create() {
+		return new SemaphoreLockedLibrary();
+	}
 
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
-		Book theBook = RepositoryManager.peekRandomBook(this);
+		Book book = RepositoryManager.peekRandomBook(this);
 		String readerID = Thread.currentThread().getName();
 
 		boolean isTaken = false;
 		while (!isTaken) {
 			SemaphoreLock.getInstance().aquireWriteLock();
-			if (theBook.isAvailable()) {
-				theBook.setAvailable(false);
-				theBook.incrementReadingCounter();
+			if (book.isAvailable()) {
+				book.setAvailable(false);
+				book.incrementReadingCounter();
 				SemaphoreLock.getInstance().releaseWriteLock();
 				isTaken = true;
-				LOGGER.debug(readerID + " took the book " + theBook.getTitle());
+				String message = RepositoryManager.bookUsingReportMessage(book);
+				LOGGER.debug(readerID + message + book.getTitle());
 			} else {
 				SemaphoreLock.getInstance().releaseWriteLock();
 				LOGGER.debug(readerID + "\t\t\t is waiting for "
-						+ theBook.getTitle());
+						+ book.getTitle());
 				Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
 			}
 		}
-		return theBook;
+		return book;
 	}
 
 	@Override
@@ -83,7 +90,8 @@ public class SemaphoreLockedLibrary extends Repository {
 		}
 		book.setAvailable(false);
 		book.incrementReadingCounter();
-		LOGGER.debug(readerID + " took the book " + book.getTitle());
+		String message = RepositoryManager.bookUsingReportMessage(book);
+		LOGGER.debug(readerID + message + book.getTitle());
 	}
 
 }

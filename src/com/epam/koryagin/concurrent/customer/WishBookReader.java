@@ -8,7 +8,6 @@ import com.epam.koryagin.concurrent.repository.Repository;
 
 public class WishBookReader extends Customer {
 	private static final Logger LOGGER = Logger.getLogger(WishBookReader.class);
-
 	/**
 	 * Default constructor with DefaultLibrary
 	 */

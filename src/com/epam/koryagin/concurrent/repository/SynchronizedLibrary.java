@@ -18,21 +18,28 @@ public class SynchronizedLibrary extends Repository {
 	public SynchronizedLibrary(Set<Book> books) {
 		this.setBooks(books);
 	}
-
+	
+	/**
+	 * Static fabric method
+	 */
+	public static Repository create() {
+		return new SynchronizedLibrary();
+	}
 	public Book borrowRandomBook() throws InterruptedException {
-		Book theBook = RepositoryManager.peekRandomBook(this);
+		Book book = RepositoryManager.peekRandomBook(this);
 		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
-			while (!theBook.isAvailable()) {
+			while (!book.isAvailable()) {
 				LOGGER.debug(readerID + "\t\t\t is waiting for "
-						+ theBook.getTitle());
+						+ book.getTitle());
 				wait();
 			}
-			theBook.setAvailable(false);
-			theBook.incrementReadingCounter();
-			LOGGER.debug(readerID + " took the book " + theBook.getTitle());
+			book.setAvailable(false);
+			book.incrementReadingCounter();
+			String message = RepositoryManager.bookUsingReportMessage(book);
+			LOGGER.debug(readerID + message + book.getTitle());
 		}
-		return theBook;
+		return book;
 	}
 
 	public void returnBook(Book theBook) {
@@ -69,7 +76,7 @@ public class SynchronizedLibrary extends Repository {
 		}
 		book.setAvailable(false);
 		book.incrementReadingCounter();
-		LOGGER.debug(readerID + " took the book " + book.getTitle());
-
+		String message = RepositoryManager.bookUsingReportMessage(book);
+		LOGGER.debug(readerID + message + book.getTitle());
 	}
 }

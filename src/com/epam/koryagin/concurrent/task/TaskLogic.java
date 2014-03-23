@@ -1,9 +1,7 @@
 package com.epam.koryagin.concurrent.task;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.epam.koryagin.concurrent.customer.factory.CustomerAbstractFactory;
 import com.epam.koryagin.concurrent.customer.factory.ReaderFactory;
 import com.epam.koryagin.concurrent.customer.factory.WishBookReaderFactory;
@@ -27,7 +25,7 @@ public final class TaskLogic {
 		LOGGER.info("RUN SYNCHRONIZED LIBRARY TASK");
 		// Create library
 		Repository library = LibraryTaskLogic
-				.createLibrary(new SynchronizedLibrary());
+				.createLibrary(SynchronizedLibrary.create());
 		// Create readers
 		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
 		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);
@@ -43,7 +41,7 @@ public final class TaskLogic {
 		LOGGER.info("RUN SEMAPHORE LOCKED LIBRARY TASK");
 		// Create library
 		Repository library = LibraryTaskLogic
-				.createLibrary(SemaphoreLockedLibrary.getInstance());
+				.createLibrary(SemaphoreLockedLibrary.create());
 		// Create readers
 		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
 		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);
@@ -59,7 +57,7 @@ public final class TaskLogic {
 		LOGGER.info("RUN WISH BOOK LIST LIBRARY TASK");
 		// Create library
 		Repository thelibrary = LibraryTaskLogic
-				.createLibrary(DefaultLibrary.getInstance());
+				.createLibrary(DefaultLibrary.create());
 		// Create readers
 		CustomerAbstractFactory readerFactory = new WishBookReaderFactory(thelibrary);
 		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);
@@ -75,7 +73,7 @@ public final class TaskLogic {
 		LOGGER.info("RUN UNSAFE LIBRARY TASK");
 		// Create library
 		Repository library = LibraryTaskLogic
-				.createLibrary(DefaultLibrary.getInstance());
+				.createLibrary(DefaultLibrary.create());
 		// Create readers
 		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
 		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);

@@ -19,38 +19,36 @@ public class DefaultLibrary extends Repository {
 	}
 
 	private static final class SingletonHolder {
-		public static final DefaultLibrary INSTANCE = new DefaultLibrary();
+		public static final Repository INSTANCE = new DefaultLibrary();
 	}
 
-	public static DefaultLibrary getInstance() {
+	/**
+	 * getInstance() returns library Singleton
+	 */
+	public static Repository getInstance() {
 		return SingletonHolder.INSTANCE;
+	}
+
+	/**
+	 * Static fabric method
+	 */
+	public static Repository create() {
+		return new DefaultLibrary();
 	}
 
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
-		Book theBook = RepositoryManager.peekRandomBook(this);
+		Book book = RepositoryManager.peekRandomBook(this);
 		String readerID = Thread.currentThread().getName();
-		while (!theBook.isAvailable()) {
-			LOGGER.debug(readerID + "\t\t\t is waiting for "
-					+ theBook.getTitle());
+		while (!book.isAvailable()) {
+			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
 			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
 		}
-		theBook.setAvailable(false);
-		theBook.incrementReadingCounter();
-
-		String message;
-		switch (theBook.getRestriction()) {
-		case AVAILABLE_FOR_BORROWING:
-			message = " borrowed the book ";
-			break;
-		case READING_ROOM_ONLY:
-			message = " is in the Reading Room with the book ";
-			break;
-		default:
-			message = "";
-		}
-		LOGGER.debug(readerID + message + theBook.getTitle());
-		return theBook;
+		book.setAvailable(false);
+		book.incrementReadingCounter();
+		String message = RepositoryManager.bookUsingReportMessage(book);
+		LOGGER.debug(readerID + message + book.getTitle());
+		return book;
 	}
 
 	@Override
@@ -78,7 +76,6 @@ public class DefaultLibrary extends Repository {
 
 	@Override
 	public void borrowBook(Book book) throws InterruptedException {
-
 		String readerID = Thread.currentThread().getName();
 		while (!book.isAvailable()) {
 			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
@@ -86,17 +83,7 @@ public class DefaultLibrary extends Repository {
 		}
 		book.setAvailable(false);
 		book.incrementReadingCounter();
-		String message;
-		switch (book.getRestriction()) {
-		case AVAILABLE_FOR_BORROWING:
-			message = " borrowed the book ";
-			break;
-		case READING_ROOM_ONLY:
-			message = " is in the Reading Room with the book ";
-			break;
-		default:
-			message = "";
-		}
+		String message = RepositoryManager.bookUsingReportMessage(book);
 		LOGGER.debug(readerID + message + book.getTitle());
 	}
 }

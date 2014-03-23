@@ -23,17 +23,33 @@ public final class RepositoryManager {
 	public static Queue<Book> createRandomWishList(Repository repository) {
 		Set<Book> books = repository.getBooks();
 		int booksTotalQuantaty = books.size();
-		
-		Set<Book> wishList= new HashSet<Book>();
-		if (booksTotalQuantaty >1){
-			int wishBookQuantaty =(int)(1+Math.random()*booksTotalQuantaty);
-			while (wishBookQuantaty > 0){
-				if(wishList.add(peekRandomBook(repository))){
+
+		Set<Book> wishList = new HashSet<Book>();
+		if (booksTotalQuantaty > 1) {
+			int wishBookQuantaty = (int) (1 + Math.random()
+					* booksTotalQuantaty);
+			while (wishBookQuantaty > 0) {
+				if (wishList.add(peekRandomBook(repository))) {
 					wishBookQuantaty--;
 				}
 			}
 		}
-		
+
 		return new LinkedList<Book>(wishList);
+	}
+
+	public static String bookUsingReportMessage(Book book) {
+		String message;
+		switch (book.getRestriction()) {
+		case AVAILABLE_FOR_BORROWING:
+			message = " borrowed the book ";
+			break;
+		case READING_ROOM_ONLY:
+			message = " is in the Reading Room with the book ";
+			break;
+		default:
+			message = "";
+		}
+		return message;
 	}
 }

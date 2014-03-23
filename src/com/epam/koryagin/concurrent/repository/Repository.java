@@ -13,7 +13,7 @@ public abstract class Repository {
 					.getValue("reposotiry.bookAvailabilityPollingDelay"));
 
 	public abstract Book borrowRandomBook() throws InterruptedException;
-	
+
 	public abstract void borrowBook(Book book) throws InterruptedException;
 
 	public abstract void returnBook(Book theBook) throws InterruptedException;
