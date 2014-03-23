@@ -1,8 +1,6 @@
 package com.epam.koryagin.concurrent.repository;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -22,7 +20,7 @@ public class SynchronizedLibrary extends Repository {
 
 	public Book borrowRandomBook()
 			throws InterruptedException {
-		Book theBook = peekRandomBook();
+		Book theBook = RepositoryManager.peekRandomBook(this);
 		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
 			while (!theBook.isAvailable()) {
@@ -62,13 +60,5 @@ public class SynchronizedLibrary extends Repository {
 
 	public void setBooks(Set<Book> books) {
 		this.books = books;
-	}
-
-	@Override
-	public Book peekRandomBook (){
-		int booksTotalQuantaty = books.size();
-		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
-		List<Book> bookList = new ArrayList<Book>(books);
-		return bookList.get(bookIdx);
 	}
 }

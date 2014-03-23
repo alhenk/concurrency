@@ -52,6 +52,11 @@ public final class LibraryTaskLogic {
 		return readers;
 	}
 	
+	public static void createRandomWishList(Repository Repository){
+		
+		
+		
+	}
 
 	/**
 	 * Start reading random books

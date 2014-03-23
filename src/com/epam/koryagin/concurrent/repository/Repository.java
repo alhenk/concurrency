@@ -21,6 +21,4 @@ public abstract class Repository {
 	public abstract void remove(Book book);
 
 	public abstract Set<Book> getBooks();
-
-	public abstract Book peekRandomBook();
 }
