@@ -11,7 +11,7 @@ public abstract class Repository {
 	static final long AVAILABLE_POLLING_DELAY = Long.valueOf(PropertyManager
 			.getValue("reposotiry.availablePollingDelay"));
 
-	public abstract Book rentRandomBook() throws InterruptedException;
+	public abstract Book borrowRandomBook() throws InterruptedException;
 
 	public abstract void returnBook(Book theBook) throws InterruptedException;
 

@@ -25,7 +25,7 @@ public class SemaphoreLockedLibrary extends Repository {
 	}
 
 	@Override
-	public Book rentRandomBook() throws InterruptedException {
+	public Book borrowRandomBook() throws InterruptedException {
 		int booksTotalAmount = books.size();
 		int bookIdx = (int) (Math.random() * booksTotalAmount);
 		Book theBook = books.get(bookIdx);
@@ -33,7 +33,6 @@ public class SemaphoreLockedLibrary extends Repository {
 
 		boolean isTaken = false;
 		while (!isTaken) {
-
 			SemaphoreLock.getInstance().aquireWriteLock();
 			if (theBook.isAvailable()) {
 				theBook.setAvailable(false);

@@ -27,7 +27,7 @@ public class Customer implements Runnable {
 	 * Default constructor with SychronizedLibrary
 	 */
 	public Customer() {
-		this.repository = new DefaultLibrary();
+		this.repository = DefaultLibrary.getInstance();
 	}
 
 	public Customer(Repository repository) {
@@ -37,7 +37,7 @@ public class Customer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			theBook = repository.rentRandomBook();
+			theBook = repository.borrowRandomBook();
 			readingDelay();
 			repository.returnBook(theBook);
 		} catch (InterruptedException e) {

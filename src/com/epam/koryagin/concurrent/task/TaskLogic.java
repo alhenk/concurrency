@@ -53,12 +53,12 @@ public final class TaskLogic {
 		// Print statistics
 		LibraryTaskLogic.bookUsingReport(library);
 	}
-	
+		
 	public static void runUsafeLibraryTask() {
 		LOGGER.info("RUN UNSAFE LIBRARY TASK");
 		// Create library
 		Repository library = LibraryTaskLogic
-				.createLibrary(new DefaultLibrary());
+				.createLibrary(DefaultLibrary.getInstance());
 		// Create readers
 		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
 		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);

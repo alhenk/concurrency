@@ -18,6 +18,10 @@ public class SemaphoreLock {
 	private Semaphore writeLock = new Semaphore(5);
 
 	private Semaphore readLock = new Semaphore(10);
+	
+	public int getQueueLength (){
+		return writeLock.getQueueLength();
+	}
 
 	public void aquireWriteLock() throws InterruptedException {
 		writeLock.acquire();

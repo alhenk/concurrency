@@ -2,7 +2,9 @@ package com.epam.koryagin.concurrent.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 
 public class DefaultLibrary extends Repository {
 	private static final Logger LOGGER = Logger
@@ -11,16 +13,24 @@ public class DefaultLibrary extends Repository {
 	
 	private List<Book> books;
 
-	public DefaultLibrary() {
+	private DefaultLibrary() {
 		setBooks(new ArrayList<Book>());
 	}
 
 	public DefaultLibrary(List<Book> books) {
 		this.setBooks(books);
 	}
+	
+	private static final class SingletonHolder {
+		public static final DefaultLibrary INSTANCE = new DefaultLibrary();
+	}
+
+	public static DefaultLibrary getInstance() {
+		return SingletonHolder.INSTANCE;
+	}
 
 	@Override
-	public Book rentRandomBook() throws InterruptedException {
+	public Book borrowRandomBook() throws InterruptedException {
 		int booksTotalQuantaty = books.size();
 		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
 		Book theBook = books.get(bookIdx);

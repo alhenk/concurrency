@@ -9,7 +9,7 @@ public class Reader extends Customer {
 	 * Default constructor with DefaultLibrary
 	 */
 	public Reader() {
-		this.repository = new DefaultLibrary();
+		this.repository = DefaultLibrary.getInstance();
 	}
 
 	public Reader(Repository repository) {
@@ -19,7 +19,7 @@ public class Reader extends Customer {
 	@Override
 	public void run() {
 		try {
-			theBook = repository.rentRandomBook();
+			theBook = repository.borrowRandomBook();
 			readingDelay();
 			repository.returnBook(theBook);
 		} catch (InterruptedException e) {

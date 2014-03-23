@@ -18,7 +18,7 @@ public class SynchronizedLibrary extends Repository {
 		this.setBooks(books);
 	}
 
-	public Book rentRandomBook()
+	public Book borrowRandomBook()
 			throws InterruptedException {
 		int booksTotalQuantaty = books.size();
 		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
