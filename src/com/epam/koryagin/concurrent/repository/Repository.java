@@ -1,6 +1,6 @@
 package com.epam.koryagin.concurrent.repository;
 
-import java.util.List;
+import java.util.Set;
 
 import com.epam.koryagin.concurrent.util.PropertyManager;
 
@@ -8,8 +8,9 @@ public abstract class Repository {
 	static {
 		PropertyManager.load("configure.properties");
 	}
-	static final long AVAILABLE_POLLING_DELAY = Long.valueOf(PropertyManager
-			.getValue("reposotiry.availablePollingDelay"));
+	static final long BOOK_AVAILABILITY_POLLING_DELAY = Long
+			.valueOf(PropertyManager
+					.getValue("reposotiry.bookAvailabilityPollingDelay"));
 
 	public abstract Book borrowRandomBook() throws InterruptedException;
 
@@ -19,5 +20,7 @@ public abstract class Repository {
 
 	public abstract void remove(Book book);
 
-	public abstract List<Book> getBooks();
+	public abstract Set<Book> getBooks();
+
+	public abstract Book peekRandomBook();
 }

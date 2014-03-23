@@ -19,9 +19,9 @@ public class Reader extends Customer {
 	@Override
 	public void run() {
 		try {
-			theBook = repository.borrowRandomBook();
+			currentBook = repository.borrowRandomBook();
 			readingDelay();
-			repository.returnBook(theBook);
+			repository.returnBook(currentBook);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {

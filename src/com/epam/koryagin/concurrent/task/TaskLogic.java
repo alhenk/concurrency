@@ -28,8 +28,8 @@ public final class TaskLogic {
 		Repository library = LibraryTaskLogic
 				.createLibrary(new SynchronizedLibrary());
 		// Create readers
-		CustomerAbstractFactory reader = new ReaderFactory(library);
-		List<Thread> readers = LibraryTaskLogic.createListOfReaders(reader);
+		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
+		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);
 		// Start reading
 		LibraryTaskLogic.startReading(readers);
 		// Wait all readers returned all books

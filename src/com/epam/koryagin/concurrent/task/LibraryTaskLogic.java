@@ -20,8 +20,8 @@ public final class LibraryTaskLogic {
 			Integer.valueOf(PropertyManager.getValue("libraryTaskLogic.numberOfReaders"));
 	private static final ThreadGroup libraryReader = new ThreadGroup(
 			"A group of readers");
-	private static final long GET_STATE_POLLING_DELAY = 
-			Long.valueOf(PropertyManager.getValue("libraryTaskLogic.getStatePollingDelay"));
+	private static final long THREAD_STATE_POLLING_DELAY = 
+			Long.valueOf(PropertyManager.getValue("libraryTaskLogic.threadStatePollingDelay"));
 
 	private LibraryTaskLogic() {
 	}
@@ -51,6 +51,7 @@ public final class LibraryTaskLogic {
 		}
 		return readers;
 	}
+	
 
 	/**
 	 * Start reading random books
@@ -74,7 +75,7 @@ public final class LibraryTaskLogic {
 				}
 			}
 			try {
-				Thread.sleep(GET_STATE_POLLING_DELAY);
+				Thread.sleep(THREAD_STATE_POLLING_DELAY);
 			} catch (InterruptedException e) {
 				LOGGER.error(e);
 			}
@@ -88,7 +89,7 @@ public final class LibraryTaskLogic {
 	public static void waitAllReadersFinished() {
 		while (libraryReader.activeCount() > 0) {
 			try {
-				Thread.sleep(GET_STATE_POLLING_DELAY);
+				Thread.sleep(THREAD_STATE_POLLING_DELAY);
 			} catch (InterruptedException e) {
 				LOGGER.error(e);
 			}

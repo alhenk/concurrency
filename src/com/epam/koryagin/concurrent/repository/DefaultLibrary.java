@@ -1,7 +1,9 @@
 package com.epam.koryagin.concurrent.repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -11,13 +13,13 @@ public class DefaultLibrary extends Repository {
 			.getLogger(DefaultLibrary.class);
 
 	
-	private List<Book> books;
+	private Set<Book> books;
 
 	private DefaultLibrary() {
-		setBooks(new ArrayList<Book>());
+		setBooks(new HashSet<Book>());
 	}
 
-	public DefaultLibrary(List<Book> books) {
+	public DefaultLibrary(Set<Book> books) {
 		this.setBooks(books);
 	}
 	
@@ -31,17 +33,13 @@ public class DefaultLibrary extends Repository {
 
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
-		int booksTotalQuantaty = books.size();
-		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
-		Book theBook = books.get(bookIdx);
+		Book theBook = peekRandomBook();
 		String readerID = Thread.currentThread().getName();
-		
 		while (!theBook.isAvailable()) {
 			LOGGER.debug(readerID + "\t\t\t is waiting for "
 					+ theBook.getTitle());
-			Thread.sleep(AVAILABLE_POLLING_DELAY);
+			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
 		}
-				
 		theBook.setAvailable(false);
 		theBook.incrementReadingCounter();
 		LOGGER.debug(readerID + " took the book " + theBook.getTitle());
@@ -54,6 +52,13 @@ public class DefaultLibrary extends Repository {
 		String readerID = Thread.currentThread().getName();
 		LOGGER.debug(readerID + " returned the book " + theBook.getTitle());
 	}
+	
+	public Book peekRandomBook (){
+		int booksTotalQuantaty = books.size();
+		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
+		List<Book> bookList = new ArrayList<Book>(books);
+		return bookList.get(bookIdx);
+	}
 
 	public void add(Book book) {
 		books.add(book.copyBook());
@@ -63,11 +68,11 @@ public class DefaultLibrary extends Repository {
 		books.remove(book);
 	}
 
-	public List<Book> getBooks() {
+	public Set<Book> getBooks() {
 		return books;
 	}
 
-	public void setBooks(List<Book> books) {
+	public void setBooks(Set<Book> books) {
 		this.books = books;
 	}
 }

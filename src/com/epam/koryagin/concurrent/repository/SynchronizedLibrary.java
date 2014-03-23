@@ -1,28 +1,28 @@
 package com.epam.koryagin.concurrent.repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 public class SynchronizedLibrary extends Repository {
 	private static final Logger LOGGER = Logger
 			.getLogger(SynchronizedLibrary.class);
-	private List<Book> books;
+	private Set<Book> books;
 
 	public SynchronizedLibrary() {
-		books = new ArrayList<Book>();
+		books = new HashSet<Book>();
 	}
 
-	public SynchronizedLibrary(List<Book> books) {
+	public SynchronizedLibrary(Set<Book> books) {
 		this.setBooks(books);
 	}
 
 	public Book borrowRandomBook()
 			throws InterruptedException {
-		int booksTotalQuantaty = books.size();
-		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
-		Book theBook = books.get(bookIdx);
+		Book theBook = peekRandomBook();
 		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
 			while (!theBook.isAvailable()) {
@@ -56,11 +56,19 @@ public class SynchronizedLibrary extends Repository {
 		books.remove(book);
 	}
 
-	public List<Book> getBooks() {
+	public Set<Book> getBooks() {
 		return books;
 	}
 
-	public void setBooks(List<Book> books) {
+	public void setBooks(Set<Book> books) {
 		this.books = books;
+	}
+
+	@Override
+	public Book peekRandomBook (){
+		int booksTotalQuantaty = books.size();
+		int bookIdx = (int) (Math.random() * booksTotalQuantaty);
+		List<Book> bookList = new ArrayList<Book>(books);
+		return bookList.get(bookIdx);
 	}
 }
