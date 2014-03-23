@@ -37,7 +37,19 @@ public class DefaultLibrary extends Repository {
 		}
 		theBook.setAvailable(false);
 		theBook.incrementReadingCounter();
-		LOGGER.debug(readerID + " took the book " + theBook.getTitle());
+
+		String message;
+		switch (theBook.getRestriction()) {
+		case AVAILABLE_FOR_BORROWING:
+			message = " borrowed the book ";
+			break;
+		case READING_ROOM_ONLY:
+			message = " is in the Reading Room with the book ";
+			break;
+		default:
+			message = "";
+		}
+		LOGGER.debug(readerID + message + theBook.getTitle());
 		return theBook;
 	}
 
@@ -66,15 +78,25 @@ public class DefaultLibrary extends Repository {
 
 	@Override
 	public void borrowBook(Book book) throws InterruptedException {
-		
+
 		String readerID = Thread.currentThread().getName();
 		while (!book.isAvailable()) {
-			LOGGER.debug(readerID + "\t\t\t is waiting for "
-					+ book.getTitle());
+			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
 			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
 		}
 		book.setAvailable(false);
 		book.incrementReadingCounter();
-		LOGGER.debug(readerID + " took the book " + book.getTitle());
+		String message;
+		switch (book.getRestriction()) {
+		case AVAILABLE_FOR_BORROWING:
+			message = " borrowed the book ";
+			break;
+		case READING_ROOM_ONLY:
+			message = " is in the Reading Room with the book ";
+			break;
+		default:
+			message = "";
+		}
+		LOGGER.debug(readerID + message + book.getTitle());
 	}
 }

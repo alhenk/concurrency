@@ -17,12 +17,14 @@ public final class LibraryTaskLogic {
 	}
 	private static final Logger LOGGER = Logger
 			.getLogger(LibraryTaskLogic.class);
-	private static final int NUMBER_OF_READERS = 
-			Integer.valueOf(PropertyManager.getValue("libraryTaskLogic.numberOfReaders"));
+	private static final int NUMBER_OF_READERS = Integer
+			.valueOf(PropertyManager
+					.getValue("libraryTaskLogic.numberOfReaders"));
 	private static final ThreadGroup libraryReader = new ThreadGroup(
 			"A group of readers");
-	private static final long THREAD_STATE_POLLING_DELAY = 
-			Long.valueOf(PropertyManager.getValue("libraryTaskLogic.threadStatePollingDelay"));
+	private static final long THREAD_STATE_POLLING_DELAY = Long
+			.valueOf(PropertyManager
+					.getValue("libraryTaskLogic.threadStatePollingDelay"));
 
 	private LibraryTaskLogic() {
 	}
@@ -37,19 +39,19 @@ public final class LibraryTaskLogic {
 		book = new Book("Terminator");
 		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
 		library.add(book);
-		book =new Book("ABC");
+		book = new Book("ABC");
 		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
 		library.add(book);
-		book =new Book("StarWars");
+		book = new Book("StarWars");
 		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
 		library.add(book);
-		book =new Book("MatrixThe");
+		book = new Book("MatrixThe");
 		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
 		library.add(book);
-		book =new Book("GameOfThrones");
+		book = new Book("GameOfThrones");
 		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
 		library.add(book);
-		book =new Book("LordOfTheRingsThe");
+		book = new Book("LordOfTheRingsThe");
 		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
 		library.add(book);
 		return library;
@@ -62,8 +64,8 @@ public final class LibraryTaskLogic {
 			CustomerAbstractFactory customerFactory) {
 		List<Thread> readers = new ArrayList<Thread>();
 		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(new Thread(libraryReader, customerFactory.createCustomer(), " "
-					+ customerFactory.getName() + idx));
+			readers.add(new Thread(libraryReader, customerFactory
+					.createCustomer(), " " + customerFactory.getName() + idx));
 		}
 		return readers;
 	}
@@ -98,8 +100,8 @@ public final class LibraryTaskLogic {
 	}
 
 	/**
-	 * Wait until all readers returned books only for debugging purpose
-	 * The method activeCount() gives only estimation
+	 * Wait until all readers returned books only for debugging purpose The
+	 * method activeCount() gives only estimation
 	 */
 	public static void waitAllReadersFinished() {
 		while (libraryReader.activeCount() > 0) {
@@ -124,7 +126,8 @@ public final class LibraryTaskLogic {
 			report.append(book.getTitle()).append(" was read \t\t")
 					.append(readingCounter).append(" times\n");
 		}
-		report.append("\nTOTAL NUMBER OF READERS ").append(totalAmount).append("\n");
+		report.append("\nTOTAL NUMBER OF READERS ").append(totalAmount)
+				.append("\n");
 		LOGGER.info(report.toString());
 	}
 }

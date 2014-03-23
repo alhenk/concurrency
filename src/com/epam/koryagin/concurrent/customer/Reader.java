@@ -18,6 +18,10 @@ public class Reader extends Customer {
 	public Reader(Repository repository) {
 		this.repository = repository;
 	}
+	
+	public static Customer create(Repository repository) {
+		return new Reader(repository);
+	}
 
 	@Override
 	public void run() {

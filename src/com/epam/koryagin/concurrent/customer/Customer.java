@@ -56,6 +56,9 @@ public class Customer implements Runnable {
 	public void setWishBookList(Queue<Book> wishList){
 		this.wishList = wishList;
 	}
+	public Queue<Book> getWishBookList(){
+		return wishList;
+	}
 
 	@Override
 	public void run() {

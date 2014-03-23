@@ -18,9 +18,15 @@ public class Book implements Serializable, Comparable<Book> {
 		this();
 		this.title = title;
 	}
+	
+	public Book(String title, RestrictionType restriction) {
+		this();
+		this.title = title;
+		this.restriction = restriction;
+	}
 
 	public Book copyBook() {
-		Book copyBook = new Book(this.getTitle());
+		Book copyBook = new Book(this.getTitle(), this.restriction);
 		return copyBook;
 	}
 

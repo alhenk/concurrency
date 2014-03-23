@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.epam.koryagin.concurrent.customer.factory.CustomerAbstractFactory;
 import com.epam.koryagin.concurrent.customer.factory.ReaderFactory;
+import com.epam.koryagin.concurrent.customer.factory.WishBookReaderFactory;
 import com.epam.koryagin.concurrent.repository.DefaultLibrary;
 import com.epam.koryagin.concurrent.repository.Repository;
 import com.epam.koryagin.concurrent.repository.SemaphoreLockedLibrary;
@@ -52,6 +53,22 @@ public final class TaskLogic {
 		LibraryTaskLogic.waitAllReadersFinished();
 		// Print statistics
 		LibraryTaskLogic.bookUsingReport(library);
+	}
+	
+	public static void runWishBookListLibraryTask() {
+		LOGGER.info("RUN WISH BOOK LIST LIBRARY TASK");
+		// Create library
+		Repository thelibrary = LibraryTaskLogic
+				.createLibrary(DefaultLibrary.getInstance());
+		// Create readers
+		CustomerAbstractFactory readerFactory = new WishBookReaderFactory(thelibrary);
+		List<Thread> readers = LibraryTaskLogic.createListOfReaders(readerFactory);
+		// Start reading
+		LibraryTaskLogic.startReading(readers);
+		// Wait all readers returned all books
+		LibraryTaskLogic.waitAllReadersFinished();
+		// Print statistics
+		LibraryTaskLogic.bookUsingReport(thelibrary);
 	}
 		
 	public static void runUnsafeLibraryTask() {

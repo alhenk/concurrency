@@ -7,8 +7,8 @@ import com.epam.koryagin.concurrent.repository.DefaultLibrary;
 import com.epam.koryagin.concurrent.repository.Repository;
 
 public class WishBookReader extends Customer {
-	private static final Logger LOGGER = Logger
-			.getLogger(WishBookReader.class);
+	private static final Logger LOGGER = Logger.getLogger(WishBookReader.class);
+
 	/**
 	 * Default constructor with DefaultLibrary
 	 */
@@ -20,9 +20,13 @@ public class WishBookReader extends Customer {
 		this.repository = repository;
 	}
 
+	public static Customer create(Repository repository) {
+		return new WishBookReader(repository);
+	}
+
 	@Override
 	public void run() {
-		while (wishList !=null && !wishList.isEmpty()) {
+		while (wishList != null && !wishList.isEmpty()) {
 			Book wishBook = wishList.poll();
 			try {
 				repository.borrowBook(wishBook);

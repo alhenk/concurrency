@@ -5,6 +5,8 @@ public class Runner {
 	public static void main(String[] args) {
 		TaskLogic.runSynchronizedLibraryTask();
 		TaskLogic.runSemaphoreLockedLibraryTask();
-		TaskLogic.runUnsafeLibraryTask();
+		TaskLogic.runWishBookListLibraryTask();
+		//TaskLogic.runUnsafeLibraryTask();
+		
 	}
 }
