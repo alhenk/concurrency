@@ -2,10 +2,13 @@ package com.epam.koryagin.concurrent.task;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 import com.epam.koryagin.concurrent.customer.factory.CustomerAbstractFactory;
 import com.epam.koryagin.concurrent.repository.Book;
 import com.epam.koryagin.concurrent.repository.Repository;
+import com.epam.koryagin.concurrent.repository.RestrictionType;
 import com.epam.koryagin.concurrent.util.PropertyManager;
 
 public final class LibraryTaskLogic {
@@ -28,12 +31,27 @@ public final class LibraryTaskLogic {
 	 * Create library with certain books
 	 */
 	public static Repository createLibrary(Repository library) {
-		library.add(new Book("JEE"));
-		library.add(new Book("Terminator"));
-		library.add(new Book("ABC"));
-		library.add(new Book("StarWars"));
-		library.add(new Book("TheMatrix"));
-		library.add(new Book("GameOfThrones"));
+		Book book = new Book("JEE");
+		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
+		library.add(book);
+		book = new Book("Terminator");
+		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
+		library.add(book);
+		book =new Book("ABC");
+		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
+		library.add(book);
+		book =new Book("StarWars");
+		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
+		library.add(book);
+		book =new Book("MatrixThe");
+		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
+		library.add(book);
+		book =new Book("GameOfThrones");
+		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
+		library.add(book);
+		book =new Book("LordOfTheRingsThe");
+		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
+		library.add(book);
 		return library;
 	}
 
