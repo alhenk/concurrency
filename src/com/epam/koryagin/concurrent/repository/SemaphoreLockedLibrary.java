@@ -74,4 +74,16 @@ public class SemaphoreLockedLibrary extends Repository {
 		this.books = books;
 	}
 
+	@Override
+	public void borrowBook(Book book) throws InterruptedException {
+		String readerID = Thread.currentThread().getName();
+		while (!book.isAvailable()) {
+			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
+			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
+		}
+		book.setAvailable(false);
+		book.incrementReadingCounter();
+		LOGGER.debug(readerID + " took the book " + book.getTitle());
+	}
+
 }

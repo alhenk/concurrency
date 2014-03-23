@@ -3,12 +3,16 @@ package com.epam.koryagin.concurrent.customer;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.apache.log4j.Logger;
+
 import com.epam.koryagin.concurrent.repository.Book;
 import com.epam.koryagin.concurrent.repository.DefaultLibrary;
 import com.epam.koryagin.concurrent.repository.Repository;
 import com.epam.koryagin.concurrent.util.PropertyManager;
 
 public class Customer implements Runnable {
+	private static final Logger LOGGER = Logger
+			.getLogger(Customer.class);
 	static {
 		PropertyManager.load("configure.properties");
 	}
@@ -60,7 +64,7 @@ public class Customer implements Runnable {
 			readingDelay();
 			repository.returnBook(currentBook);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOGGER.info(e);
 		}
 	}
 

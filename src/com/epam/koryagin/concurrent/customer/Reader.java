@@ -1,9 +1,13 @@
 package com.epam.koryagin.concurrent.customer;
 
+import org.apache.log4j.Logger;
+
 import com.epam.koryagin.concurrent.repository.DefaultLibrary;
 import com.epam.koryagin.concurrent.repository.Repository;
 
 public class Reader extends Customer {
+	private static final Logger LOGGER = Logger
+			.getLogger(Reader.class);
 	/**
 	 * Default constructor with DefaultLibrary
 	 */
@@ -22,7 +26,7 @@ public class Reader extends Customer {
 			readingDelay();
 			repository.returnBook(currentBook);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOGGER.info(e);
 		} 
 	}
 }

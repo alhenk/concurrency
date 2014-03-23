@@ -1,9 +1,14 @@
 package com.epam.koryagin.concurrent.customer;
 
+import org.apache.log4j.Logger;
+
+import com.epam.koryagin.concurrent.repository.Book;
 import com.epam.koryagin.concurrent.repository.DefaultLibrary;
 import com.epam.koryagin.concurrent.repository.Repository;
 
 public class WishBookReader extends Customer {
+	private static final Logger LOGGER = Logger
+			.getLogger(WishBookReader.class);
 	/**
 	 * Default constructor with DefaultLibrary
 	 */
@@ -17,14 +22,15 @@ public class WishBookReader extends Customer {
 
 	@Override
 	public void run() {
-		
-		
-		try {
-			currentBook = repository.borrowRandomBook();
-			readingDelay();
-			repository.returnBook(currentBook);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} 
+		while (wishList !=null && !wishList.isEmpty()) {
+			Book wishBook = wishList.poll();
+			try {
+				repository.borrowBook(wishBook);
+				readingDelay();
+				repository.returnBook(wishBook);
+			} catch (InterruptedException e) {
+				LOGGER.info(e);
+			}
+		}
 	}
 }
