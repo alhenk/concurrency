@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 public class SynchronizedLibrary extends Repository {
 	private static final Logger LOGGER = Logger
 			.getLogger(SynchronizedLibrary.class);
+
 	private Set<Book> books;
 
 	public SynchronizedLibrary() {
@@ -18,8 +19,7 @@ public class SynchronizedLibrary extends Repository {
 		this.setBooks(books);
 	}
 
-	public Book borrowRandomBook()
-			throws InterruptedException {
+	public Book borrowRandomBook() throws InterruptedException {
 		Book theBook = RepositoryManager.peekRandomBook(this);
 		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
@@ -30,8 +30,7 @@ public class SynchronizedLibrary extends Repository {
 			}
 			theBook.setAvailable(false);
 			theBook.incrementReadingCounter();
-			LOGGER.debug(readerID + " took the book "
-					+ theBook.getTitle());
+			LOGGER.debug(readerID + " took the book " + theBook.getTitle());
 		}
 		return theBook;
 	}
@@ -40,8 +39,7 @@ public class SynchronizedLibrary extends Repository {
 		String readerID = Thread.currentThread().getName();
 		synchronized (this) {
 			theBook.setAvailable(true);
-			LOGGER.debug(readerID + " returned the book "
-					+ theBook.getTitle());
+			LOGGER.debug(readerID + " returned the book " + theBook.getTitle());
 			notifyAll();
 		}
 	}

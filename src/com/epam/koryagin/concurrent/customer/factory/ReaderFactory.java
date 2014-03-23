@@ -3,6 +3,7 @@ package com.epam.koryagin.concurrent.customer.factory;
 import com.epam.koryagin.concurrent.customer.Customer;
 import com.epam.koryagin.concurrent.customer.Reader;
 import com.epam.koryagin.concurrent.repository.Repository;
+import com.epam.koryagin.concurrent.repository.RepositoryManager;
 
 public class ReaderFactory implements CustomerAbstractFactory {
 
@@ -14,7 +15,9 @@ public class ReaderFactory implements CustomerAbstractFactory {
 	
 	@Override
 	public Customer createCustomer() {
-		return Reader.create(repository);
+		Customer reader = Reader.create(repository);
+		reader.setWishBookList(RepositoryManager.createRandomWishList(repository));
+		return reader;
 	}
 
 	@Override

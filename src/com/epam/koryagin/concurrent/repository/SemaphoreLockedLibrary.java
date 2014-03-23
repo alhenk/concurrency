@@ -74,5 +74,4 @@ public class SemaphoreLockedLibrary extends Repository {
 		this.books = books;
 	}
 
-
 }

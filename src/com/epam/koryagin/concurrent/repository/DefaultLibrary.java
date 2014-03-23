@@ -5,12 +5,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-
 public class DefaultLibrary extends Repository {
-	private static final Logger LOGGER = Logger
-			.getLogger(DefaultLibrary.class);
+	private static final Logger LOGGER = Logger.getLogger(DefaultLibrary.class);
 
-	
 	private Set<Book> books;
 
 	private DefaultLibrary() {
@@ -20,7 +17,7 @@ public class DefaultLibrary extends Repository {
 	public DefaultLibrary(Set<Book> books) {
 		this.setBooks(books);
 	}
-	
+
 	private static final class SingletonHolder {
 		public static final DefaultLibrary INSTANCE = new DefaultLibrary();
 	}
@@ -50,8 +47,6 @@ public class DefaultLibrary extends Repository {
 		String readerID = Thread.currentThread().getName();
 		LOGGER.debug(readerID + " returned the book " + theBook.getTitle());
 	}
-	
-
 
 	public void add(Book book) {
 		books.add(book.copyBook());

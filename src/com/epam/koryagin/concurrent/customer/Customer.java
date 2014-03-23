@@ -20,7 +20,7 @@ public class Customer implements Runnable {
 
 	Repository repository;
 	Book currentBook;
-	Queue<Book> whishList;
+	Queue<Book> wishList;
 	private int readerID = counter++;
 
 	public static Customer create(Repository repository) {
@@ -31,7 +31,7 @@ public class Customer implements Runnable {
 	 * Default constructor with DefaultLibrary
 	 */
 	public Customer() {
-		this.whishList = new LinkedList<Book>();
+		this.wishList = new LinkedList<Book>();
 		this.repository = DefaultLibrary.getInstance();
 	}
 
@@ -39,15 +39,18 @@ public class Customer implements Runnable {
 		this.repository = repository;
 	}
 	
-	public void addWhishBook(Book book){
-		whishList.add(book);
+	public void addWishBook(Book book){
+		wishList.add(book);
 	}
 	
-	public Book pollWhishBook(){
-		return whishList.poll();
+	public Book pollWishBook(){
+		return wishList.poll();
 	}
-	public Book peekWhishBook(){
-		return whishList.peek();
+	public Book peekWishBook(){
+		return wishList.peek();
+	}
+	public void setWishBookList(Queue<Book> wishList){
+		this.wishList = wishList;
 	}
 
 	@Override

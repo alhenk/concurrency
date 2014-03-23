@@ -2,9 +2,7 @@ package com.epam.koryagin.concurrent.task;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.epam.koryagin.concurrent.customer.factory.CustomerAbstractFactory;
 import com.epam.koryagin.concurrent.repository.Book;
 import com.epam.koryagin.concurrent.repository.Repository;
@@ -50,12 +48,6 @@ public final class LibraryTaskLogic {
 					+ customerFactory.getName() + idx));
 		}
 		return readers;
-	}
-	
-	public static void createRandomWishList(Repository Repository){
-		
-		
-		
 	}
 
 	/**
