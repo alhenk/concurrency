@@ -6,7 +6,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class Tonnel {
+public class Tunnel {
 	
 	private BlockingQueue<Train> path = new ArrayBlockingQueue<Train>(2) {
 	private static final long serialVersionUID = -3870375802264355874L;

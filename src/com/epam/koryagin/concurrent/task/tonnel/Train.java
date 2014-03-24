@@ -17,22 +17,22 @@ public class Train extends Thread {
 	private static int counter = 0;
 
 	private int trainID = counter++;
-	private Tonnel tonnel;
+	private Tunnel tunnel;
 
 	public Train() {
-		this.tonnel = new Tonnel();
+		this.tunnel = new Tunnel();
 	}
 
-	private Train(Tonnel tonnel) {
-		this.setTonnel(tonnel);
+	private Train(Tunnel tunnel) {
+		this.setTunnel(tunnel);
 	}
 
-	public static Train create(Tonnel tonnel) {
+	public static Train create(Tunnel tonnel) {
 		return new Train(tonnel);
 	}
 
 	public void run() {
-		BlockingQueue<Train> path = tonnel.getPath();
+		BlockingQueue<Train> path = tunnel.getPath();
 		
 		try {
 			path.put(this);
@@ -53,12 +53,12 @@ public class Train extends Thread {
 		this.trainID = trainID;
 	}
 
-	public Tonnel getTonnel() {
-		return tonnel;
+	public Tunnel getTunnel() {
+		return tunnel;
 	}
 
-	public void setTonnel(Tonnel tonnel) {
-		this.tonnel = tonnel;
+	public void setTunnel(Tunnel tunnel) {
+		this.tunnel = tunnel;
 	}
 
 	public void pathDelay() throws InterruptedException {
