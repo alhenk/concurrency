@@ -1,133 +1,114 @@
 package com.epam.koryagin.concurrent.task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.epam.koryagin.concurrent.customer.factory.CustomerAbstractFactory;
-import com.epam.koryagin.concurrent.repository.Book;
+import com.epam.koryagin.concurrent.customer.factory.ReaderFactory;
+import com.epam.koryagin.concurrent.customer.factory.WishBookReaderFactory;
+import com.epam.koryagin.concurrent.repository.DefaultLibrary;
+import com.epam.koryagin.concurrent.repository.LibraryManager;
 import com.epam.koryagin.concurrent.repository.Repository;
-import com.epam.koryagin.concurrent.repository.RestrictionType;
-import com.epam.koryagin.concurrent.util.PropertyManager;
+import com.epam.koryagin.concurrent.repository.SemaphoreLockedLibrary;
+import com.epam.koryagin.concurrent.repository.SynchronizedLibrary;
 
+/**
+ * JAVALAB TASK 4 LOGIC (SMALL LIBRARY) collection of solutions
+ * 
+ * @author Alexandr Koryagin
+ */
 public final class LibraryTaskLogic {
-	static {
-		PropertyManager.load("configure.properties");
-	}
 	private static final Logger LOGGER = Logger
 			.getLogger(LibraryTaskLogic.class);
-	private static final int NUMBER_OF_READERS = Integer
-			.valueOf(PropertyManager
-					.getValue("libraryTaskLogic.numberOfReaders"));
-	private static final ThreadGroup libraryReader = new ThreadGroup(
-			"A group of readers");
-	private static final long THREAD_STATE_POLLING_DELAY = Long
-			.valueOf(PropertyManager
-					.getValue("libraryTaskLogic.threadStatePollingDelay"));
 
 	private LibraryTaskLogic() {
 	}
 
 	/**
-	 * Create library with certain books
+	 * Readers are trying to get a random book from a library and wait for it if
+	 * it not available. Concurrency resolved by library's synchronized methods
 	 */
-	public static Repository createLibrary(Repository library) {
-		Book book = new Book("JEE");
-		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
-		library.add(book);
-		book = new Book("Terminator");
-		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
-		library.add(book);
-		book = new Book("ABC");
-		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
-		library.add(book);
-		book = new Book("StarWars");
-		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
-		library.add(book);
-		book = new Book("MatrixThe");
-		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
-		library.add(book);
-		book = new Book("GameOfThrones");
-		book.setRestriction(RestrictionType.READING_ROOM_ONLY);
-		library.add(book);
-		book = new Book("LordOfTheRingsThe");
-		book.setRestriction(RestrictionType.AVAILABLE_FOR_BORROWING);
-		library.add(book);
-		return library;
+	public static void runSynchronizedLibraryTask() {
+		LOGGER.info("RUN SYNCHRONIZED LIBRARY TASK");
+		// Create library
+		Repository library = LibraryManager.createLibrary(SynchronizedLibrary
+				.create());
+		// Create readers
+		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
+		List<Thread> readers = LibraryManager
+				.createListOfReaders(readerFactory);
+		// Start reading
+		LibraryManager.startReading(readers);
+		// Wait all readers returned all books
+		LibraryManager.waitAllReadersFinished();
+		// Print statistics
+		LibraryManager.bookUsingReport(library);
 	}
 
 	/**
-	 * Create list of thread readers in the group of LibraryReaders
+	 * Readers are trying to get a random book from a library and wait for it if
+	 * it not available. Concurrency resolved by semaphore
 	 */
-	public static List<Thread> createListOfReaders(
-			CustomerAbstractFactory customerFactory) {
-		List<Thread> readers = new ArrayList<Thread>();
-		for (int idx = 0; idx < NUMBER_OF_READERS; idx++) {
-			readers.add(new Thread(libraryReader, customerFactory
-					.createCustomer(), " " + customerFactory.getName() + idx));
-		}
-		return readers;
+	public static void runSemaphoreLockedLibraryTask() {
+		LOGGER.info("RUN SEMAPHORE LOCKED LIBRARY TASK");
+		// Create library
+		Repository library = LibraryManager
+				.createLibrary(SemaphoreLockedLibrary.create());
+		// Create readers
+		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
+		List<Thread> readers = LibraryManager
+				.createListOfReaders(readerFactory);
+		// Start reading
+		LibraryManager.startReading(readers);
+		// Wait all readers returned all books
+		LibraryManager.waitAllReadersFinished();
+		// Print statistics
+		LibraryManager.bookUsingReport(library);
 	}
 
 	/**
-	 * Start reading random books
+	 * Readers are trying to get books from their Wish List (random) and wait
+	 * for them if they are not available. Concurrency is not resolved at all
+	 * (unsafe)
 	 */
-	public static void startReading(List<Thread> readers) {
-		for (Thread reader : readers) {
-			reader.start();
-		}
+	public static void runWishBookListLibraryTask() {
+		LOGGER.info("RUN WISH BOOK LIST LIBRARY TASK");
+		// Create library
+		Repository thelibrary = LibraryManager.createLibrary(DefaultLibrary
+				.create());
+		// Create readers
+		CustomerAbstractFactory readerFactory = new WishBookReaderFactory(
+				thelibrary);
+		List<Thread> readers = LibraryManager
+				.createListOfReaders(readerFactory);
+		// Start reading
+		LibraryManager.startReading(readers);
+		// Wait all readers returned all books
+		LibraryManager.waitAllReadersFinished();
+		// Print statistics
+		LibraryManager.bookUsingReport(thelibrary);
 	}
 
 	/**
-	 * Wait until all readers returned books
+	 * Readers are trying to get a random book from a library and wait for it if
+	 * it not available. Concurrency is not resolved at all (unsafe)
 	 */
-	public static void waitAllReadersFinished(List<Thread> readers) {
-		boolean allReadingFinished = false;
-		while (!allReadingFinished) {
-			allReadingFinished = true;
-			for (Thread reader : readers) {
-				if (reader.getState() != Thread.State.TERMINATED) {
-					allReadingFinished = false;
-				}
-			}
-			try {
-				Thread.sleep(THREAD_STATE_POLLING_DELAY);
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			}
-		}
+	public static void runUnsafeLibraryTask() {
+		LOGGER.info("RUN UNSAFE LIBRARY TASK");
+		// Create library
+		Repository library = LibraryManager.createLibrary(DefaultLibrary
+				.create());
+		// Create readers
+		CustomerAbstractFactory readerFactory = new ReaderFactory(library);
+		List<Thread> readers = LibraryManager
+				.createListOfReaders(readerFactory);
+		// Start reading
+		LibraryManager.startReading(readers);
+		// Wait all readers returned all books
+		LibraryManager.waitAllReadersFinished();
+		// Print statistics
+		LibraryManager.bookUsingReport(library);
 	}
 
-	/**
-	 * Wait until all readers returned books only for debugging purpose The
-	 * method activeCount() gives only estimation
-	 */
-	public static void waitAllReadersFinished() {
-		while (libraryReader.activeCount() > 0) {
-			try {
-				Thread.sleep(THREAD_STATE_POLLING_DELAY);
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			}
-		}
-	}
-
-	/**
-	 * Print statistics of book reading totalAmount should be equal to
-	 * NUMBER_OF_READERS
-	 */
-	public static void bookUsingReport(Repository library) {
-		StringBuilder report = new StringBuilder("\n");
-		int totalAmount = 0;
-		for (Book book : library.getBooks()) {
-			int readingCounter = book.getReadingCounter();
-			totalAmount += readingCounter;
-			report.append(book.getTitle()).append(" was read \t\t")
-					.append(readingCounter).append(" times\n");
-		}
-		report.append("\nTOTAL NUMBER OF READERS ").append(totalAmount)
-				.append("\n");
-		LOGGER.info(report.toString());
-	}
 }

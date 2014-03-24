@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-public final class RepositoryManager {
+public final class BookManager {
 
-	private RepositoryManager() {
+	private BookManager() {
 	}
 
 	public static Book peekRandomBook(Repository repository) {

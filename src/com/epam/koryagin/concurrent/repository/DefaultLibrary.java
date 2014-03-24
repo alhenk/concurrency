@@ -37,7 +37,7 @@ public class DefaultLibrary extends Repository {
 
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
-		Book book = RepositoryManager.peekRandomBook(this);
+		Book book = BookManager.peekRandomBook(this);
 		borrowBook(book);
 		return book;
 	}
@@ -74,7 +74,7 @@ public class DefaultLibrary extends Repository {
 				book.setAvailable(false);
 				book.incrementReadingCounter();
 				isTaken = true;
-				String message = RepositoryManager.bookUsingReportMessage(book);
+				String message = BookManager.bookUsingReportMessage(book);
 				LOGGER.debug(readerID + message + book.getTitle());
 			} else {
 				LOGGER.debug(readerID + "\t\t\t is waiting for "

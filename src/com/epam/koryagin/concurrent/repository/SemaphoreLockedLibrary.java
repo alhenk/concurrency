@@ -34,7 +34,7 @@ public class SemaphoreLockedLibrary extends Repository {
 
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
-		Book book = RepositoryManager.peekRandomBook(this);
+		Book book = BookManager.peekRandomBook(this);
 		borrowBook(book);
 		return book;
 	}
@@ -75,7 +75,7 @@ public class SemaphoreLockedLibrary extends Repository {
 				book.incrementReadingCounter();
 				SemaphoreLock.getInstance().releaseWriteLock();
 				isTaken = true;
-				String message = RepositoryManager.bookUsingReportMessage(book);
+				String message = BookManager.bookUsingReportMessage(book);
 				LOGGER.debug(readerID + message + book.getTitle());
 			} else {
 				SemaphoreLock.getInstance().releaseWriteLock();

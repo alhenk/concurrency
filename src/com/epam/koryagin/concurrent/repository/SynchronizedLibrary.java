@@ -27,7 +27,7 @@ public class SynchronizedLibrary extends Repository {
 	}
 
 	public Book borrowRandomBook() throws InterruptedException {
-		Book book = RepositoryManager.peekRandomBook(this);
+		Book book = BookManager.peekRandomBook(this);
 		borrowBook(book);
 		return book;
 	}
@@ -68,7 +68,7 @@ public class SynchronizedLibrary extends Repository {
 			}
 			book.setAvailable(false);
 			book.incrementReadingCounter();
-			String message = RepositoryManager.bookUsingReportMessage(book);
+			String message = BookManager.bookUsingReportMessage(book);
 			LOGGER.debug(readerID + message + book.getTitle());
 		}
 	}
