@@ -1,4 +1,4 @@
-package com.epam.koryagin.concurrent.task.tunnel;
+package com.epam.koryagin.concurrent.tunnel;
 
 public class ResourceException extends Exception {
 	private static final long serialVersionUID = 3562837202526925688L;

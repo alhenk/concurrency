@@ -1,4 +1,4 @@
-package com.epam.koryagin.concurrent.task.tunnel;
+package com.epam.koryagin.concurrent.tunnel;
 
 import java.util.Random;
 

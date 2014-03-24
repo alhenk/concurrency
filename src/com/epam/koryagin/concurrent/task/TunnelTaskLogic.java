@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
-import com.epam.koryagin.concurrent.task.tunnel.Train;
-import com.epam.koryagin.concurrent.task.tunnel.Tunnel;
-import com.epam.koryagin.concurrent.task.tunnel.TunnelPool;
+import com.epam.koryagin.concurrent.tunnel.Train;
+import com.epam.koryagin.concurrent.tunnel.Tunnel;
+import com.epam.koryagin.concurrent.tunnel.TunnelPool;
 import com.epam.koryagin.concurrent.util.PropertyManager;
 
 /**

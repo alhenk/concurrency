@@ -1,4 +1,4 @@
-package com.epam.koryagin.concurrent.task.tunnel;
+package com.epam.koryagin.concurrent.tunnel;
 
 import org.apache.log4j.Logger;
 
