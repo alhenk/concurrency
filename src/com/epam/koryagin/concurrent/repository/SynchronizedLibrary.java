@@ -1,7 +1,7 @@
 package com.epam.koryagin.concurrent.repository;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -12,33 +12,23 @@ public class SynchronizedLibrary extends Repository {
 	private Set<Book> books;
 
 	public SynchronizedLibrary() {
-		books = new HashSet<Book>();
+		books = new TreeSet<Book>();
 	}
 
 	public SynchronizedLibrary(Set<Book> books) {
 		this.setBooks(books);
 	}
-	
+
 	/**
 	 * Static fabric method
 	 */
 	public static Repository create() {
 		return new SynchronizedLibrary();
 	}
+
 	public Book borrowRandomBook() throws InterruptedException {
 		Book book = RepositoryManager.peekRandomBook(this);
-		String readerID = Thread.currentThread().getName();
-		synchronized (this) {
-			while (!book.isAvailable()) {
-				LOGGER.debug(readerID + "\t\t\t is waiting for "
-						+ book.getTitle());
-				wait();
-			}
-			book.setAvailable(false);
-			book.incrementReadingCounter();
-			String message = RepositoryManager.bookUsingReportMessage(book);
-			LOGGER.debug(readerID + message + book.getTitle());
-		}
+		borrowBook(book);
 		return book;
 	}
 
@@ -70,13 +60,16 @@ public class SynchronizedLibrary extends Repository {
 	@Override
 	public void borrowBook(Book book) throws InterruptedException {
 		String readerID = Thread.currentThread().getName();
-		while (!book.isAvailable()) {
-			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
-			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
+		synchronized (this) {
+			while (!book.isAvailable()) {
+				LOGGER.debug(readerID + "\t\t\t is waiting for "
+						+ book.getTitle());
+				wait();
+			}
+			book.setAvailable(false);
+			book.incrementReadingCounter();
+			String message = RepositoryManager.bookUsingReportMessage(book);
+			LOGGER.debug(readerID + message + book.getTitle());
 		}
-		book.setAvailable(false);
-		book.incrementReadingCounter();
-		String message = RepositoryManager.bookUsingReportMessage(book);
-		LOGGER.debug(readerID + message + book.getTitle());
 	}
 }

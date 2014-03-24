@@ -1,8 +1,7 @@
 package com.epam.koryagin.concurrent.repository;
 
-import java.util.HashSet;
 import java.util.Set;
-
+import java.util.TreeSet;
 import org.apache.log4j.Logger;
 
 public class DefaultLibrary extends Repository {
@@ -11,7 +10,7 @@ public class DefaultLibrary extends Repository {
 	private Set<Book> books;
 
 	private DefaultLibrary() {
-		setBooks(new HashSet<Book>());
+		setBooks(new TreeSet<Book>());
 	}
 
 	public DefaultLibrary(Set<Book> books) {
@@ -39,15 +38,7 @@ public class DefaultLibrary extends Repository {
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
 		Book book = RepositoryManager.peekRandomBook(this);
-		String readerID = Thread.currentThread().getName();
-		while (!book.isAvailable()) {
-			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
-			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
-		}
-		book.setAvailable(false);
-		book.incrementReadingCounter();
-		String message = RepositoryManager.bookUsingReportMessage(book);
-		LOGGER.debug(readerID + message + book.getTitle());
+		borrowBook(book);
 		return book;
 	}
 
@@ -77,13 +68,19 @@ public class DefaultLibrary extends Repository {
 	@Override
 	public void borrowBook(Book book) throws InterruptedException {
 		String readerID = Thread.currentThread().getName();
-		while (!book.isAvailable()) {
-			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
-			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
+		boolean isTaken = false;
+		while (!isTaken) {
+			if (book.isAvailable()) {
+				book.setAvailable(false);
+				book.incrementReadingCounter();
+				isTaken = true;
+				String message = RepositoryManager.bookUsingReportMessage(book);
+				LOGGER.debug(readerID + message + book.getTitle());
+			} else {
+				LOGGER.debug(readerID + "\t\t\t is waiting for "
+						+ book.getTitle());
+				Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
+			}
 		}
-		book.setAvailable(false);
-		book.incrementReadingCounter();
-		String message = RepositoryManager.bookUsingReportMessage(book);
-		LOGGER.debug(readerID + message + book.getTitle());
 	}
 }

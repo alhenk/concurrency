@@ -1,7 +1,7 @@
 package com.epam.koryagin.concurrent.repository;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -14,7 +14,7 @@ public class SemaphoreLockedLibrary extends Repository {
 	private Set<Book> books;
 
 	private SemaphoreLockedLibrary() {
-		this.books = new HashSet<Book>();
+		this.books = new TreeSet<Book>();
 	}
 
 	private static final class SingletonHolder {
@@ -24,6 +24,7 @@ public class SemaphoreLockedLibrary extends Repository {
 	public static SemaphoreLockedLibrary getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
+
 	/**
 	 * Static fabric method
 	 */
@@ -34,25 +35,7 @@ public class SemaphoreLockedLibrary extends Repository {
 	@Override
 	public Book borrowRandomBook() throws InterruptedException {
 		Book book = RepositoryManager.peekRandomBook(this);
-		String readerID = Thread.currentThread().getName();
-
-		boolean isTaken = false;
-		while (!isTaken) {
-			SemaphoreLock.getInstance().aquireWriteLock();
-			if (book.isAvailable()) {
-				book.setAvailable(false);
-				book.incrementReadingCounter();
-				SemaphoreLock.getInstance().releaseWriteLock();
-				isTaken = true;
-				String message = RepositoryManager.bookUsingReportMessage(book);
-				LOGGER.debug(readerID + message + book.getTitle());
-			} else {
-				SemaphoreLock.getInstance().releaseWriteLock();
-				LOGGER.debug(readerID + "\t\t\t is waiting for "
-						+ book.getTitle());
-				Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
-			}
-		}
+		borrowBook(book);
 		return book;
 	}
 
@@ -84,14 +67,23 @@ public class SemaphoreLockedLibrary extends Repository {
 	@Override
 	public void borrowBook(Book book) throws InterruptedException {
 		String readerID = Thread.currentThread().getName();
-		while (!book.isAvailable()) {
-			LOGGER.debug(readerID + "\t\t\t is waiting for " + book.getTitle());
-			Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
+		boolean isTaken = false;
+		while (!isTaken) {
+			SemaphoreLock.getInstance().aquireWriteLock();
+			if (book.isAvailable()) {
+				book.setAvailable(false);
+				book.incrementReadingCounter();
+				SemaphoreLock.getInstance().releaseWriteLock();
+				isTaken = true;
+				String message = RepositoryManager.bookUsingReportMessage(book);
+				LOGGER.debug(readerID + message + book.getTitle());
+			} else {
+				SemaphoreLock.getInstance().releaseWriteLock();
+				LOGGER.debug(readerID + "\t\t\t is waiting for "
+						+ book.getTitle());
+				Thread.sleep(BOOK_AVAILABILITY_POLLING_DELAY);
+			}
 		}
-		book.setAvailable(false);
-		book.incrementReadingCounter();
-		String message = RepositoryManager.bookUsingReportMessage(book);
-		LOGGER.debug(readerID + message + book.getTitle());
 	}
 
 }
