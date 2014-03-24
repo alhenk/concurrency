@@ -3,8 +3,8 @@ CONCURRENCY
 
 JAVALAB project task 4
 
-Group of tasks Library implements different approach
-in solving concurrency of multiple threads Readers
+A group of tasks "Small Library", that implements different approach
+to solving concurrency of multiple threads (Readers)
 to get the resource Library, by using :
 
 	- synchronized block on Library object;
@@ -17,5 +17,5 @@ A couple of library tasks are implemented in thread unsafe mode
 	
 	- Wish Book List Library Task
 	
-Also it has solution for Tunnel Task (by using semaphore)
+Also it has a solution for the Tunnel task (by using semaphore)
 
